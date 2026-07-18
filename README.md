@@ -1,11 +1,15 @@
 # lymphocyte_loop
 
-A single-shader TouchDesigner piece: a black & white, microscopic view of
-**lymphocytes pulsing through an asymmetric, golden-ratio-structured blood
-vessel** that disintegrates, explodes into platelet-like "plaquette" fragments,
-and reconstructs itself — as a **seamless video loop**.
+A single-shader TouchDesigner piece rendered to look like a **scanning-electron-
+microscope (SEM) micrograph**: black & white 3D relief, dramatic edge-lit
+grayscale, spiky microvilli-studded **lymphocytes** flowing along an asymmetric,
+golden-ratio-structured **vessel network**, with **connective tissue** decaying
+into pores. The tissue ruptures into spiky **platelets ("plaquettes")**, then
+reconstructs — as a **seamless video loop**.
 
-Everything is generated procedurally inside one GLSL TOP. No source footage.
+Everything is generated procedurally inside one GLSL TOP — a heightfield relief
+lit with SEM-style shading (directional key + edge-brightening on steep slopes +
+crevice occlusion). No source footage.
 
 ![concept](docs/preview.png) <!-- optional: drop a screenshot here -->
 
@@ -13,13 +17,14 @@ Everything is generated procedurally inside one GLSL TOP. No source footage.
 
 | Idea | How it's done |
 | --- | --- |
-| Lymphocytes contracting in a narrow vessel, **asymmetric rhythm** | Irregular systolic/diastolic pulse (sharp attack, slow decay) with a period that wobbles via noise, so the beat never repeats symmetrically. |
-| Cells moving **up/down like a heartbeat** | Cells drift along the vessel with a traveling pulse wave; radius pulses with it. |
-| **Black & white**, microscopic | Grayscale-only output + fine photographic grain, plus a Monochrome TOP safety pass. |
-| Connective tissue **disintegrating with limited movement** | A noise field inside the walls only shifts its *threshold* over time (no positional motion) — holes open, nothing translates. |
-| Pumping reaches nothing → **explosion → plaquette reconstruction → loop** | Near the end of each cycle the frame fractures into scattered chunks, peaks, then reassembles exactly by loop wrap. |
-| **Golden ratio 1.618 everywhere** | Drives fbm lacunarity/gain, vessel-wave harmonics, cell spacing, chunk-grid density, and the explosion timing thresholds (0.618, 0.764). |
-| **No symmetry** | Distinct phases, irrational phase offsets, and hash-based jitter throughout. |
+| **SEM micrograph** look | Procedural heightfield relief; normal from height gradient; shaded with a directional key light, SEM edge-brightening (`pow(1 - N.z, k)` glows steep slopes), and crevice occlusion. |
+| Spiky **lymphocytes** | Hemisphere domes on the vessel, surface studded with high-frequency fbm "microvilli"; radius pulses with the heartbeat. |
+| **Asymmetric rhythm / heartbeat** | Systolic/diastolic beat (sharp attack, slow decay) traveling along the vessel; per-cell phase offsets so no two pulse together. |
+| Connective tissue **decay** | A Worley pore field whose pits deepen/widen as `gDecay` rises, opening holes in the tissue sheet. |
+| Pumping → **rupture → plaquettes → reconstruction → loop** | The vessel/fibre network tears (ragged remnants remain) while a dense field of craggy, filopodia-spiked platelets emerges, then everything reforms by loop wrap. |
+| **Golden ratio 1.618 everywhere** | Drives fbm lacunarity/gain, vessel-wave harmonics, cell spacing, and the explosion timing thresholds (0.618, 0.764). |
+| **No symmetry** | Diagonal framing, irrational harmonic phase offsets, and hash-based per-cell jitter throughout. |
+| **Seamless loop** | *All* motion is periodic in `loopT`: meander/flow sway via `sin`, a whole number of heartbeats per loop (`fract`), and decay/rupture are arcs that return to zero at the wrap. Verified frame-identical at `loopT≈0` and `loopT≈1`. |
 
 ## Files
 
