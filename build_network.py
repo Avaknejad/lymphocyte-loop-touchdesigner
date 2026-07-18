@@ -37,8 +37,22 @@ UNIFORMS = [
     ('uSeed',         0.0),
 ]
 
-_here = os.path.dirname(os.path.abspath(__file__)) if '__file__' in dir() else project.folder
-FRAG_PATH = os.path.join(_here, 'lymphocyte_loop.frag')
+def _script_dir():
+    """Directory holding this script, however it's run.
+
+    When exec'd from a Textport the module-level ``__file__`` may be absent or
+    clobbered, so fall back to searching common locations for the .frag.
+    """
+    try:
+        return os.path.dirname(os.path.abspath(__file__))
+    except NameError:
+        for cand in (project.folder,
+                     os.path.join(project.folder, 'lymphocyte-loop-touchdesigner')):
+            if os.path.isfile(os.path.join(cand, 'lymphocyte_loop.frag')):
+                return cand
+        return project.folder
+
+FRAG_PATH = os.path.join(_script_dir(), 'lymphocyte_loop.frag')
 
 
 def build():
