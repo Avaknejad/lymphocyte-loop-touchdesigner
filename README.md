@@ -13,6 +13,11 @@ crevice occlusion). No source footage.
 
 ![concept](docs/preview.png) <!-- optional: drop a screenshot here -->
 
+**Rendered loop:** [`lymphocyte_loop.mp4`](lymphocyte_loop.mp4) — 1280×720, 60 fps,
+exactly 12.0 s (720 frames), H.264. Rendered deterministically (uniform stepped
+frame-by-frame, not realtime-captured) so every frame is exact and the loop is
+seam-free.
+
 ## Concept → implementation
 
 | Idea | How it's done |
